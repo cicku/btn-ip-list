@@ -15,7 +15,7 @@ ip.src in $btn
 - A Cloudflare account (Free plan works for custom IP lists).
 - A domain on Cloudflare DNS with Email Sending onboarded; the `EMAIL_FROM`
   address must live on that domain.
-- Node 18+ and `jq` on the build host.
+- Node 18+ on the build host.
 
 ## Setup
 
@@ -24,9 +24,6 @@ npm install
 npx wrangler kv namespace create BTN_STATE         # note the returned id
 npx wrangler email sending enable yourdomain.com   # if not already
 npx wrangler secret put LIST_API_TOKEN             # Account Filter Lists: Edit
-
-cp .env.example .env
-$EDITOR .env                                       # account id, emails, kv id
 ```
 
 Optional: `npx wrangler secret put ADMIN_TOKEN` if you want the `POST /sync`
@@ -34,16 +31,42 @@ admin endpoint to work.
 
 ## Deploy
 
-```bash
-npm run deploy        # or `npm run deploy:dry` to validate without uploading
+The tracked `wrangler.jsonc` has placeholder values for account-specific
+fields. At deploy time `scripts/deploy.mjs` substitutes the real values from
+the build environment into a temp config and runs `wrangler deploy` against
+it. Required env vars:
+
+```
+BTN_ACCOUNT_ID
+EMAIL_FROM
+EMAIL_TO
+BTN_STATE_KV_ID
+ROUTE_PATTERN     # e.g. example.com/btn*
+ROUTE_ZONE        # e.g. example.com
 ```
 
-`scripts/deploy.sh` sources `.env`, substitutes the values into a temp copy of
-`wrangler.jsonc`, and hands it to `wrangler deploy`. Real values never enter
-the tracked config.
+### From Cloudflare Workers Builds (recommended)
 
-`workers_dev` and `preview_urls` are off, so the Worker has no public URL. The
-cron is the only thing that fires unless you add a custom route.
+Connect the repo in the dashboard, then:
+
+- **Deploy command**: `npm run deploy`
+- **Build variables**: the six names above, set to your real values
+
+Pushes to the default branch trigger a CI deploy.
+
+### From your laptop
+
+```bash
+cp .env.example .env       # then edit .env with your real values
+npm run deploy             # or `npm run deploy:dry` to validate
+```
+
+`.env` is gitignored. The script reads it (and falls back to plain env vars
+if it isn't present), so the local and CI paths use the same code.
+
+`workers_dev` and `preview_urls` are off, so the Worker has no public URL by
+default — only the cron fires unless you wire a custom route via
+`ROUTE_PATTERN`.
 
 ## How it works
 
