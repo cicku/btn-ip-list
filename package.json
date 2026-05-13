@@ -1,0 +1,20 @@
+{
+  "name": "btn-ip-list",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Cloudflare Worker that syncs PBH-BTN collected rules into a Cloudflare WAF custom IP list and emails diff summaries.",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "node scripts/deploy.mjs",
+    "deploy:dry": "node scripts/deploy.mjs --dry-run",
+    "types": "wrangler types",
+    "typecheck": "tsc --noEmit",
+    "trigger": "wrangler dev --test-scheduled"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260511.1",
+    "typescript": "^6.0.3",
+    "wrangler": "^4.90.1"
+  }
+}

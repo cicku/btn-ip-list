@@ -1,0 +1,50 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "btn-ip-list",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-05-01",
+  "compatibility_flags": ["nodejs_compat"],
+
+  "workers_dev": false,
+  "preview_urls": false,
+
+  "triggers": {
+    "crons": ["5,25,45 * * * *"]
+  },
+
+  "routes": [
+    {
+      "pattern": "REPLACE_WITH_ROUTE_PATTERN",
+      "zone_name": "REPLACE_WITH_ROUTE_ZONE"
+    }
+  ],
+
+  "vars": {
+    "CF_LIST_NAME": "btn",
+    "EMAIL_FROM_NAME": "BTN IP List Bot"
+  },
+
+  "send_email": [
+    {
+      "name": "EMAIL",
+      "destination_address": "you@example.com"
+    }
+  ],
+
+  "kv_namespaces": [
+    {
+      "binding": "BTN_STATE",
+      "id": "REPLACE_WITH_KV_NAMESPACE_ID"
+    }
+  ],
+
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1,
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 1,
+      "invocation_logs": true
+    }
+  }
+}
