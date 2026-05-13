@@ -85,6 +85,7 @@ export async function runSync(
 
 	log("sync_done", {
 		level: putError ? "error" : "info",
+		message: putError ? "sync completed with error" : "sync completed successfully",
 		total: fetched.ips.length,
 		added: diff.added.length,
 		removed: diff.removed.length,
